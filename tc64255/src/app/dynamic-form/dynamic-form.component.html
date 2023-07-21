@@ -1,0 +1,51 @@
+<form style="width: 100%">
+  <div *ngFor="let section of formSections">
+    <h3>{{ section.title }}</h3>
+    <div class="row" *ngIf="section.components && section.components.length">
+      <ng-container *ngFor="let comp of section.components; index as i">
+        <div style="width: 100%">
+          <ng-container [ngSwitch]="comp.type">
+            <!-- When switchcase is textbox, create a div that contains an textbox -->
+            <div *ngSwitchCase="'textbox'">
+              <label>
+                {{ comp.label }}
+              </label>
+              <textarea
+                [name]="comp.key"
+                [(ngModel)]="formData[comp.key]"
+                (ngModelChange)="handleValidate()"
+              ></textarea>
+            </div>
+            <!-- When switchcase is radio, create a div that contains a radio button -->
+            <div *ngSwitchCase="'radio'">
+              <label>
+                {{ comp.label }}
+              </label>
+              <ng-container *ngFor="let option of comp.options">
+                <input
+                  type="radio"
+                  [name]="comp.key"
+                  [value]="option.value"
+                  [(ngModel)]="formData[comp.key]"
+                  (ngModelChange)="handleValidate()"
+                />
+                {{ option.label }}
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <!-- create a submit button -->
+  <div class="row">
+    <button
+      type="submit"
+      style="width: 80px; height: 40px; margin-top: 20px"
+      (click)="onSubmit()"
+      [disabled]="isDisable"
+    >
+      Submit
+    </button>
+  </div>
+</form>
